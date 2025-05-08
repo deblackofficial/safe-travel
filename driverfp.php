@@ -1,3 +1,43 @@
+<?php
+session_start(); // Start the session
+include 'conn.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve form data from session
+    $formData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
+
+    // Retrieve additional form data from this page
+    $accident = isset($_POST['accident']) ? 1 : 0; // Checkbox for "Accident"
+    $unauthorized = isset($_POST['unauthorized']) ? 1 : 0; // Checkbox for "Unauthorized Product"
+    $description = mysqli_real_escape_string($conn, $_POST['description']);
+
+    // Combine all data
+    $phone = $formData['phone'];
+    $agency = $formData['agency'];
+    $plate = $formData['plate'];
+    $place = $formData['place'];
+    $datetime = $formData['datetime'];
+    $latitude = $formData['latitude'];
+    $longitude = $formData['longitude'];
+    $permit = $formData['permit'];
+
+    // Insert combined data into the database
+    $sql = "INSERT INTO driver_report (phone, agency, plate, place, datetime, latitude, longitude, permit, accident, unauthorized, description) 
+            VALUES ('$phone', '$agency', '$plate', '$place', '$datetime', '$latitude', '$longitude', '$permit', '$accident', '$unauthorized', '$description')";
+
+    if (mysqli_query($conn, $sql)) {
+        // Clear session after successful submission
+        unset($_SESSION['form_data']);
+        // Use JavaScript to show the alert and then redirect
+         echo "<script>alert('Report submitted successfully!');
+            window.location.href = 'index.html';
+            </script>";
+        exit();
+    } else {
+        echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,7 +170,7 @@
 <body>
   <div class="report-box">
     <h2>Choose the case and Describe</h2>
-
+    <form method="POST" action="driverfp.php">
     <div class="checkbox-group">
       <label for="Accident"><input type="checkbox" id="overloading" name="Accident">Accident</label>
       <label for="unauthorized"><input type="checkbox" id="unauthorized" name="unauthorized"> Unauthorized Product</label>
@@ -138,11 +178,12 @@
 
     <textarea id="description" placeholder="Describe what you saw..." name="description"></textarea>
 
-    <button onclick="submitReport()"><strong>Submit Report</strong></button>
+    <button><strong>Submit Report</strong></button>
     <div class="divider">If not</div>
     <button class="back-button" onclick="goBack()"><strong>← Back</strong></button>
 
     <div class="confirmation" id="confirmation">✅ Your report has been submitted.</div>
+    </form>
   </div>
 
   <script>
