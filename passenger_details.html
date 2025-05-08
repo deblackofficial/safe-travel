@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passenger Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .details {
+            line-height: 1.8;
+        }
+        .details span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Passenger Details</h1>
+        </div>
+        <div class="details">
+        </div>
+    </div>
+</body>
+<script>
+    const data = [
+        { id: 1, name: "John Doe" },
+        { id: 2, name: "Jane Doe" },
+        { id: 3, name: "Some Other Passenger" },
+    ];
+
+    // Function to get query parameters
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Get the passenger ID from the query parameters
+    const passengerId = parseInt(getQueryParam('id'));
+
+    // Find the passenger details
+    const passenger = data.find(p => p.id === passengerId);
+
+    // Display the passenger details
+    const detailsDiv = document.querySelector('.details');
+    if (passenger) {
+        detailsDiv.innerHTML = `<p><span>ID:</span> ${passenger.id}</p>
+                                <p><span>Name:</span> ${passenger.name}</p>`;
+    } else {
+        detailsDiv.innerHTML = `<p>Passenger not found.</p>`;
+    }
+</script>
+</html>

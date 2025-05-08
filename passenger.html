@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Driver Form</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e4eee4;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px; /* increased max-width */
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    form {
+      background-color: white;
+      padding: 40px; /* increased padding */
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      color: #1a1a6f;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    input, select {
+      width: 100%;
+      height: 45px;
+      padding: 0 16px;
+      border: 2px solid #0c85d0;
+      border-radius: 25px;
+      margin-bottom: 15px;
+      font-size: 15px;
+      box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.2);
+      outline: none;
+      color: #555;
+    }
+
+    input::placeholder, select option {
+      color: #999;
+      font-style: italic;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background-color: #3b47f1;
+      color: white;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
+      transition: transform 0.2s ease;
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: scale(1.03);
+    }
+
+    .divider {
+      text-align: center;
+      width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .btn {
+        width: 100%;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form id="driverForm">
+      <label for="ticket">Ticket Id</label>
+      <input id="ticket" name="phone" type="tel" placeholder="Eg: 1234 567 890" required />
+
+      <label for="agency">Agency name</label>
+      <input id="agency" name="agency" type="text" placeholder="Eg: Ritco, Volcano,......." required />
+
+      <label for="plate">Plate number</label>
+      <input id="plate" name="plate" type="text" placeholder="Eg: RAF 123,,,,,," required />
+
+      <label for="place">Place</label>
+      <select id="place" name="place" required>
+        <option value="">Select a Road</option>
+        <option value="KIGALI_KARONGI_RUSIZI">KIGALI_KARONGI_RUSIZI</option>
+        <option value="KIGALI_HUYE_RUSIZI">KIGALI_HUYE_RUSIZI</option>
+        <option value="KIGALI-MUSANZE_RUBAVU">IGALI-MUSANZE_RUBAVU</option>
+        <option value="KIGALI_KAYONZA_RUSUMO">KIGALI_KAYONZA_RUSUMO</option>
+        <option value="KIGALI_KAYONZA_KAGITUMBA">KIGALI_KAYONZA_KAGITUMBA</option>
+        <option value="KIGALI_NGARAMA_NYAGATARE">KIGALI_NGARAMA_NYAGATARE</option>
+      </select>
+
+      <label for="datetime">Date & Time</label>
+      <input id="datetime" name="datetime" type="datetime-local" required />
+      <label for="permit">Upload <strong>file</strong> here</label>
+      <input id="permit" name="permit" type="file" accept="image/*,.pdf" required />
+      <!-- GPS Section inserted here -->
+      <label>Capture Location</label>
+      <button type="button" class="btn" id="getLocationBtn">Get Current Location</button>
+      <input id="latitude" name="latitude" type="text" placeholder="Latitude" readonly required />
+      <input id="longitude" name="longitude" type="text" placeholder="Longitude" readonly required />
+      <div class="buttons">
+        <button class="btn" type="submit">Continue</button>
+        <div class="divider"><h2>If not</h2></div>
+        <a href="choose.html" class="btn"><strong>BACK</strong></a>
+      </div>
+    </form>
+  </div>
+  <script>
+    // Save permit file to localStorage
+    document.getElementById('permit').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        localStorage.setItem('driverPermit', reader.result);
+        alert('Permit file saved to localStorage.');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Capture GPS location
+    document.getElementById("getLocationBtn").addEventListener("click", function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const lat = position.coords.latitude.toFixed(6);
+            const lon = position.coords.longitude.toFixed(6);
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = lon;
+
+            // Optional: store to localStorage
+            localStorage.setItem("driverLatitude", lat);
+            localStorage.setItem("driverLongitude", lon);
+            alert("Location captured: " + lat + ", " + lon);
+          },
+          function (error) {
+            alert("Error getting location: " + error.message);
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    });
+
+    // Redirect on form submit
+    document.getElementById("driverForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      window.location.href = "driverfp.html";
+    });
+  </script>
+</body>
+</html>

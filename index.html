@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passenger Case Reporting Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #d3f3d3, #eef2ff);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .text-section {
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .text-section h1 {
+      font-size: 52px;
+      color: #3a3aff;
+      margin-bottom: 10px;
+      font-family: 'Comic Neue', cursive;
+    }
+
+    .text-section h3 {
+      font-weight: normal;
+      margin-bottom: 30px;
+      font-size: 22px;
+      color: #444;
+    }
+
+    .info-box {
+      background: #ffffff;
+      border-left: 6px solid #3a3aff;
+      border-radius: 15px;
+      padding: 25px;
+      font-size: 18px;
+      line-height: 1.7;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .continue-btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 14px 36px;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      background-color: #3a3aff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .continue-btn:hover {
+      background-color: #2a2ad8;
+      transform: scale(1.05);
+    }
+
+    .image-section {
+      flex: 1;
+      max-width: 500px;
+      transform: translateX(20px);
+      transition: transform 0.3s;
+    }
+
+    .image-section:hover {
+      transform: translateX(20px) scale(1.03);
+    }
+
+    .image-section img {
+      width: 100%;
+      border-radius: 25px;
+      object-fit: cover;
+      box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .footer-text {
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+      color: #666;
+      background-color: transparent;
+    }
+
+    @media (max-width: 960px) {
+      .container {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+      }
+
+      .text-section, .image-section {
+        max-width: 100%;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="text-section">
+    <h1>Hello!! 👋</h1>
+    <h3>Welcome to the passenger case reporting platform</h3>
+    <div class="info-box">
+      This platform allows passengers to report illegal or suspicious activities occurring in a vehicle in real time. The relevant authorities can be alerted and respond quickly.
+    </div>
+    <a href="choose.html" class="continue-btn">🚀 Continue</a>
+  </div>
+
+  <div class="image-section">
+    <img src="ilkade.jpg" alt="Bus Station" />
+  </div>
+</div>
+
+<div class="footer-text">
+  <strong>Empowering Passengers to Make Travel Safer ✨</strong>
+</div>
+
+<script>
+  const continueBtn = document.querySelector(".continue-btn");
+  continueBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+      window.location.href = this.getAttribute("href");
+    }, 500);
+  });
+</script>
+
+</body>
+</html>

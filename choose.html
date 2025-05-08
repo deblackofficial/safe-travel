@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Report As</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #dde4dd;
+    }
+
+    .container {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+/*      background: url('drn.jpg') no-repeat center center/cover;*/
+      filter: blur(6px);
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    h1 {
+      color: #1a1a6f;
+      font-size: 26px;
+      margin-bottom: 40px;
+    }
+
+    .button {
+      background-color: #3b47f1;
+      color: white;
+      padding: 14px 50px;
+      border: none;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 500;
+      margin: 10px 0;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a1a6f;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 20px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 2px;
+      background: #1a80f0;
+      margin: 0 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="background"></div>
+    <div class="content">
+      <h1>Report As</h1>
+      <a href="driver.html" button class="button"><strong>Driver</strong></button></a>
+      <div class="divider">Or</div>
+      <a href="passenger.html" button class="button"><strong>Passenger</strong></button></a>
+      <div class="divider">If not</div>
+            <a href="index.html" button class="button"><strong>BACK</strong></button></a>
+    </div>
+  </div>
+</body>
+</html>
