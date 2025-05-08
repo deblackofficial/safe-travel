@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session
 include 'conn.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -11,12 +12,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $latitude = mysqli_real_escape_string($conn, $_POST['latitude']);
     $longitude = mysqli_real_escape_string($conn, $_POST['longitude']);
 
+    // Save data in session
+    $_SESSION['form_data'] = [
+        'phone' => $phone,
+        'agency' => $agency,
+        'plate' => $plate,
+        'place' => $place,
+        'datetime' => $datetime,
+        'latitude' => $latitude,
+        'longitude' => $longitude,
+    ];
+
     // Handle file upload
     $permitFileName = $_FILES['permit']['name'];
     $permitTempName = $_FILES['permit']['tmp_name'];
     $permitFolder = "uploads/" . basename($permitFileName);
 
     if (move_uploaded_file($permitTempName, $permitFolder)) {
+        $_SESSION['form_data']['permit'] = $permitFileName; // Save permit file name in session
+
         // Insert data into the database
         $sql = "INSERT INTO driver_report (phone, agency, plate, place, datetime, latitude, longitude, permit) 
                 VALUES ('$phone', '$agency', '$plate', '$place', '$datetime', '$latitude', '$longitude', '$permitFileName')";
@@ -32,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('Failed to upload permit file.');</script>";
     }
 }
+
+// Retrieve session data for pre-filling the form
+$formData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
 ?>
 
 <!DOCTYPE html>
@@ -144,34 +161,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="container">
     <form id="driverForm" method="POST" enctype="multipart/form-data" action="driver.php">
       <label for="ticket">Phone Number</label>
-      <input id="ticket" name="phone" type="tel" placeholder="Tel: 1234 567 890" required />
+      <input id="ticket" name="phone" type="tel" placeholder="Tel: 1234 567 890" 
+             value="<?php echo isset($formData['phone']) ? $formData['phone'] : ''; ?>" required />
 
       <label for="agency">Agency name</label>
-      <input id="agency" name="agency" type="text" placeholder="Eg: Ritco, Volcano,......." required />
+      <input id="agency" name="agency" type="text" placeholder="Eg: Ritco, Volcano,......." 
+             value="<?php echo isset($formData['agency']) ? $formData['agency'] : ''; ?>" required />
 
       <label for="plate">Plate number</label>
-      <input id="plate" name="plate" type="text" placeholder="Eg: RAF 123,,,,,," required />
+      <input id="plate" name="plate" type="text" placeholder="Eg: RAF 123,,,,,," 
+             value="<?php echo isset($formData['plate']) ? $formData['plate'] : ''; ?>" required />
 
       <label for="place">Place</label>
       <select id="place" name="place" required>
         <option value="">Select a Road</option>
-        <option value="KIGALI_KARONGI_RUSIZI">KIGALI_KARONGI_RUSIZI</option>
-        <option value="KIGALI_HUYE_RUSIZI">KIGALI_HUYE_RUSIZI</option>
-        <option value="KIGALI-MUSANZE_RUBAVU">IGALI-MUSANZE_RUBAVU</option>
-        <option value="KIGALI_KAYONZA_RUSUMO">KIGALI_KAYONZA_RUSUMO</option>
-        <option value="KIGALI_KAYONZA_KAGITUMBA">KIGALI_KAYONZA_KAGITUMBA</option>
-        <option value="KIGALI_NGARAMA_NYAGATARE">KIGALI_NGARAMA_NYAGATARE</option>
+        <option value="KIGALI_KARONGI_RUSIZI" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_KARONGI_RUSIZI') ? 'selected' : ''; ?>>KIGALI_KARONGI_RUSIZI</option>
+        <option value="KIGALI_HUYE_RUSIZI" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_HUYE_RUSIZI') ? 'selected' : ''; ?>>KIGALI_HUYE_RUSIZI</option>
+        <option value="KIGALI-MUSANZE_RUBAVU" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI-MUSANZE_RUBAVU') ? 'selected' : ''; ?>>KIGALI-MUSANZE_RUBAVU</option>
+        <option value="KIGALI_KAYONZA_RUSUMO" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_KAYONZA_RUSUMO') ? 'selected' : ''; ?>>KIGALI_KAYONZA_RUSUMO</option>
+        <option value="KIGALI_KAYONZA_KAGITUMBA" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_KAYONZA_KAGITUMBA') ? 'selected' : ''; ?>>KIGALI_KAYONZA_KAGITUMBA</option>
+        <option value="KIGALI_NGARAMA_NYAGATARE" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_NGARAMA_NYAGATARE') ? 'selected' : ''; ?>>KIGALI_NGARAMA_NYAGATARE</option>
       </select>
 
       <label for="datetime">Date & Time</label>
-      <input id="datetime" name="datetime" type="datetime-local" required />
+      <input id="datetime" name="datetime" type="datetime-local" 
+             value="<?php echo isset($formData['datetime']) ? $formData['datetime'] : ''; ?>" required />
+
       <label for="permit">Upload Your <strong><u>PERMIT</u></strong> here</label>
       <input id="permit" name="permit" type="file" accept="image/*,.pdf" required />
-      <!-- GPS Section inserted here -->
+
       <label>Capture Location</label>
       <button type="button" class="btn" id="getLocationBtn">Get Current Location</button>
-      <input id="latitude" name="latitude" type="text" placeholder="Latitude" readonly required />
-      <input id="longitude" name="longitude" type="text" placeholder="Longitude" readonly required />
+      <br>
+      <input id="latitude" name="latitude" type="text" placeholder="Latitude" 
+             value="<?php echo isset($formData['latitude']) ? $formData['latitude'] : ''; ?>" readonly required />
+      <input id="longitude" name="longitude" type="text" placeholder="Longitude" 
+             value="<?php echo isset($formData['longitude']) ? $formData['longitude'] : ''; ?>" readonly required />
+
       <div class="buttons">
         <button class="btn" type="submit">Continue</button>
         <div class="divider"><h2>If not</h2></div>
@@ -218,10 +244,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
 
     // Redirect on form submit
-    document.getElementById("driverForm").addEventListener("submit", function () {
-  // Allow the form to submit normally
-  // No need for e.preventDefault()
-});
+    // document.getElementById("driverForm").addEventListener("submit", function (e) {
+    //   e.preventDefault();
+    //   window.location.href = "driverfp.html";
+    // });
   </script>
 </body>
 </html>
