@@ -28,10 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (mysqli_query($conn, $sql)) {
         // Clear session after successful submission
         unset($_SESSION['form_data']);
-        // Use JavaScript to show the alert and then redirect
-         echo "<script>alert('Report submitted successfully!');
-            window.location.href = 'index.html';
-            </script>";
+        echo "<script>alert('Report submitted successfully!');
+              window.location.href = 'index.html';
+              </script>";
         exit();
     } else {
         echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
@@ -172,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>Choose the case and Describe</h2>
     <form method="POST" action="driverfp.php">
     <div class="checkbox-group">
-      <label for="Accident"><input type="checkbox" id="overloading" name="Accident">Accident</label>
+      <label for="Accident"><input type="checkbox" id="overloading" name="accident">Accident</label>
       <label for="unauthorized"><input type="checkbox" id="unauthorized" name="unauthorized"> Unauthorized Product</label>
     </div>
 

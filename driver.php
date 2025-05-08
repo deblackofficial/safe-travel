@@ -31,24 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (move_uploaded_file($permitTempName, $permitFolder)) {
         $_SESSION['form_data']['permit'] = $permitFileName; // Save permit file name in session
 
-        // Insert data into the database
-        $sql = "INSERT INTO driver_report (phone, agency, plate, place, datetime, latitude, longitude, permit) 
-                VALUES ('$phone', '$agency', '$plate', '$place', '$datetime', '$latitude', '$longitude', '$permitFileName')";
-
-        if (mysqli_query($conn, $sql)) {
-            // Redirect to driverfp.php after successful submission
-            header("Location: driverfp.php");
-            exit();
-        } else {
-            echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
-        }
+        // Redirect to driverfp.php
+        header("Location: driverfp.php");
+        exit();
     } else {
         echo "<script>alert('Failed to upload permit file.');</script>";
     }
 }
-
-// Retrieve session data for pre-filling the form
-$formData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
 ?>
 
 <!DOCTYPE html>
