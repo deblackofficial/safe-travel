@@ -1,21 +1,30 @@
 <?php
-session_start(); // Start the session
-include 'conn.php'; // Include the database connection file
+session_start();
+include 'conn.php';
+
+$inactiveMessage = ''; // Variable to store the inactive user message
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    // Query the database to validate the user
     $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) === 1) {
-        // User authenticated successfully
-        $_SESSION['username'] = $username; // Store username in session
-        header("Location: Dashboard/dash.html"); // Redirect to the dashboard
-        exit();
+        $user = mysqli_fetch_assoc($result);
+
+        if ($user['status'] === 'inactive') {
+            // User is inactive
+            $inactiveMessage = "Your account has been deactivated. Please contact an admin for assistance.";
+        } else {
+            // User is active, proceed with login
+            $_SESSION['id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role']; // Set the role in the session
+            header('Location: Dashboard/dash.php');
+            exit();
+        }
     } else {
         $error = "Invalid username or password.";
     }
@@ -78,10 +87,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background-color: #1a2bcf;
     }
 
-    .error {
-      color: red;
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
       text-align: center;
-      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .modal-content h3 {
+      color: #f44336;
+      margin-bottom: 10px;
+    }
+
+    .modal-content p {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .modal-content button {
+      padding: 10px 20px;
+      background-color: #3b47f1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background-color: #1a2bcf;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   </style>
 </head>
@@ -98,6 +162,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </div>
 
+  <!-- Modal -->
+  <?php if (!empty($inactiveMessage)): ?>
+    <div id="inactiveModal" class="modal" style="display: flex;">
+      <div class="modal-content">
+        <h3>Account Deactivated</h3>
+        <p><?php echo $inactiveMessage; ?></p>
+        <button onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  <?php endif; ?>
+
   <script>
     function validateForm() {
       const username = document.getElementById('username').value.trim();
@@ -109,6 +184,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       return true;
+    }
+
+    function closeModal() {
+      document.getElementById('inactiveModal').style.display = 'none';
     }
   </script>
 </body>

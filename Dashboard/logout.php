@@ -11,6 +11,6 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 // Redirect to the login page or home page
-header("Location: ../index.php"); // Adjust the path to your login or home page
+header("Location: ../login.php"); // Adjust the path to your login or home page
 exit();
 ?>

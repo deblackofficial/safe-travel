@@ -1,3 +1,13 @@
+<?php
+session_start(); // Start the session
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    // If not logged in, redirect to login page
+    header("Location: ../login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,8 +126,9 @@
   <div class="sidebar">
     <h2><strong>Dashboard</strong></h2>
     <nav>
-      <a href="user.html">Users</a>
-      <a href="#">Passengers</a>
+      <a href="userdetails.php">Users</a>
+      <a href="driverdetails.php" class="btn">View Driver Reports</a>
+      <a href="passengerdetails.php" class="btn">View Passenger Reports</a>
       <a href="logout.php">Logout</a>
     </nav>
   </div>

@@ -1,3 +1,6 @@
+<?php
+session_start(); // Start the session
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,9 +64,14 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .continue-btn {
-      display: inline-block;
+    .button-container {
       margin-top: 30px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .interactive-btn {
+      display: inline-block;
       padding: 14px 36px;
       font-size: 20px;
       font-weight: bold;
@@ -77,7 +85,7 @@
       transition: all 0.3s ease;
     }
 
-    .continue-btn:hover {
+    .interactive-btn:hover {
       background-color: #2a2ad8;
       transform: scale(1.05);
     }
@@ -131,7 +139,10 @@
     <div class="info-box">
       This platform allows passengers to report illegal or suspicious activities occurring in a vehicle in real time. The relevant authorities can be alerted and respond quickly.
     </div>
-    <a href="choose.php" class="continue-btn">🚀 Continue</a>
+    <div class="button-container">
+      <a href="choose.php" class="interactive-btn">🚀 Continue</a>
+      <a href="login.php" class="interactive-btn">🔑 Login</a>
+    </div>
   </div>
 
   <div class="image-section">
@@ -144,13 +155,15 @@
 </div>
 
 <script>
-  const continueBtn = document.querySelector(".continue-btn");
-  continueBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    document.body.classList.add("fade-out");
-    setTimeout(() => {
-      window.location.href = this.getAttribute("href");
-    }, 500);
+  const buttons = document.querySelectorAll(".interactive-btn");
+  buttons.forEach(button => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.body.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.href = this.getAttribute("href");
+      }, 500);
+    });
   });
 </script>
 
