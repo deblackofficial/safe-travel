@@ -1,0 +1,222 @@
+<?php
+session_start(); // Start the session
+include 'conn.php'; // Include the database connection file
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve form data from session
+    $formData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
+
+    // Retrieve additional form data from this page
+    $overloading = isset($_POST['overloading']) ? 1 : 0; // Checkbox for "Overloading"
+    $accident = isset($_POST['accident']) ? 1 : 0; // Checkbox for "Accident"
+    $unauthorized = isset($_POST['unauthorized']) ? 1 : 0; // Checkbox for "Unauthorized Product"
+    $description = mysqli_real_escape_string($conn, $_POST['description']);
+
+    // Combine all data
+    $ticket = $formData['ticket'];
+    $agency = $formData['agency'];
+    $plate = $formData['plate'];
+    $place = $formData['place'];
+    $datetime = $formData['datetime'];
+    $latitude = $formData['latitude'];
+    $longitude = $formData['longitude'];
+    $permit = $formData['upload'];
+
+    // Insert combined data into the database
+    $sql = "INSERT INTO passenger_report (ticket, agency, plate, place, datetime, latitude, longitude, upload, overloading, accident, unauthorized, description) 
+            VALUES ('$ticket', '$agency', '$plate', '$place', '$datetime', '$latitude', '$longitude', '$permit', '$overloading', '$accident', '$unauthorized', '$description')";
+
+    if (mysqli_query($conn, $sql)) {
+        // Clear session after successful submission
+        unset($_SESSION['form_data']);
+        echo "<script>alert('Passenger report submitted successfully!');
+              window.location.href = 'index.php'; // Redirect to the index page
+              </script>";
+        exit();
+    } else {
+        echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Passenger Case Report</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef2f3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .report-box {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      max-width: 500px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .report-box h2 {
+      margin-top: 0;
+      color: #3a3aff;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-group label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 10px;
+      border: 2px solid #3a3aff;
+      border-radius: 10px;
+      resize: none;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background-color: #3a3aff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2a2ad8;
+      transform: scale(1.02);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a1a6f;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 20px 0;
+    }
+
+    .confirmation {
+      margin-top: 20px;
+      text-align: center;
+      color: green;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .confirmation.show {
+      opacity: 1;
+    }
+
+    .back-button {
+      margin-bottom: 20px;
+      background-color: #ccc;
+      color: #333;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-box">
+    <h2>Choose the case and Describe</h2>
+    <form method="POST" action="passengerfp.php">
+      <div class="checkbox-group">
+        <label for="overloading"><input type="checkbox" id="overloading" name="overloading"> Overloading</label>
+        <label for="accident"><input type="checkbox" id="accident" name="accident"> Accident</label>
+        <label for="unauthorized"><input type="checkbox" id="unauthorized" name="unauthorized"> Unauthorized Product</label>
+      </div>
+
+      <textarea id="description" placeholder="Describe what you saw..." name="description"></textarea>
+
+      <button type="submit"><strong>Submit Report</strong></button>
+      <div class="divider">If not</div>
+      <a class="back-button" onclick="goBack()"><strong>← Back</strong></a>
+
+      <div class="confirmation" id="confirmation">✅ Your report has been submitted.</div>
+    </form>
+  </div>
+
+  <script>
+    function submitReport() {
+      const overload = document.getElementById('overloading').checked;
+      const unauthorized = document.getElementById('unauthorized').checked;
+      const description = document.getElementById('description').value.trim();
+      const confirmation = document.getElementById('confirmation');
+
+      if (!overload && !unauthorized && !description) {
+        alert("Please select at least one case or add a description.");
+        return;
+      }
+
+      // Show animated confirmation
+      confirmation.classList.add('show');
+
+      // Clear form
+      document.getElementById('overloading').checked = false;
+      document.getElementById('unauthorized').checked = false;
+      document.getElementById('description').value = '';
+
+      // Hide confirmation after 3 seconds
+      setTimeout(() => {
+        confirmation.classList.remove('show');
+      }, 3000);
+    }
+
+    function goBack() {
+      window.location.href = 'passenger.php'; // Redirect back to driver.php
+    }
+  </script>
+</body>
+</html>
