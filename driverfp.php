@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Clear session after successful submission
         unset($_SESSION['form_data']);
         echo "<script>alert('Report submitted successfully!');
-              window.location.href = 'index.html';
+              window.location.href = 'index.php';
               </script>";
         exit();
     } else {
@@ -177,9 +177,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <textarea id="description" placeholder="Describe what you saw..." name="description"></textarea>
 
-    <button><strong>Submit Report</strong></button>
+    <button type="submit"><strong>Submit Report</strong></button>
     <div class="divider">If not</div>
-    <button class="back-button" onclick="goBack()"><strong>← Back</strong></button>
+    <a class="back-button" onclick="goBack()"><strong>← Back</strong></a>
 
     <div class="confirmation" id="confirmation">✅ Your report has been submitted.</div>
     </form>
@@ -212,8 +212,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     function goBack() {
-      window.history.back(); // Or use `window.location.href = 'previous-page.html'` if preferred
-    }
+    window.location.href = 'driver.php'; // Redirect back to driver.php
+  }
   </script>
 </body>
 </html>

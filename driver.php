@@ -2,6 +2,9 @@
 session_start(); // Start the session
 include 'conn.php';
 
+// Retrieve session data for pre-filling the form
+$formData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
     $phone = mysqli_real_escape_string($conn, $_POST['phone']);
@@ -190,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="buttons">
         <button class="btn" type="submit">Continue</button>
         <div class="divider"><h2>If not</h2></div>
-        <a href="choose.html" class="btn"><strong>BACK</strong></a>
+        <a href="choose.php" class="btn"><strong>BACK</strong></a>
       </div>
     </form>
   </div>
