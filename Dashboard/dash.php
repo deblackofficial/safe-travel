@@ -118,7 +118,7 @@
     <nav>
       <a href="user.html">Users</a>
       <a href="#">Passengers</a>
-      <a href="logout.html">Logout</a>
+      <a href="logout.php">Logout</a>
     </nav>
   </div>
     <div class="main-content">
