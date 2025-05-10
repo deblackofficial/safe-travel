@@ -1,9 +1,22 @@
 <?php
 session_start(); // Start the session
-include 'conn.php';
+include 'conn.php'; // Include the database connection file
 
 // Retrieve session data for pre-filling the form
 $formData = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
+
+// Fetch routes from the database
+$routes = [];
+$sql = "SELECT CONCAT(start_point, ' - ', middle_point, ' - ', end_point) AS route FROM routes WHERE status = 'active'";
+$result = mysqli_query($conn, $sql);
+
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $routes[] = $row['route'];
+    }
+} else {
+    die("Error fetching routes: " . mysqli_error($conn));
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
@@ -66,14 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 1200px; /* increased max-width */
+      max-width: 1200px;
       padding: 10px;
       box-sizing: border-box;
     }
 
     form {
       background-color: white;
-      padding: 40px; /* increased padding */
+      padding: 40px;
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       width: 100%;
@@ -166,13 +179,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <label for="place">Place</label>
       <select id="place" name="place" required>
-        <option value="">Select a Road</option>
-        <option value="KIGALI_KARONGI_RUSIZI" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_KARONGI_RUSIZI') ? 'selected' : ''; ?>>KIGALI_KARONGI_RUSIZI</option>
-        <option value="KIGALI_HUYE_RUSIZI" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_HUYE_RUSIZI') ? 'selected' : ''; ?>>KIGALI_HUYE_RUSIZI</option>
-        <option value="KIGALI-MUSANZE_RUBAVU" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI-MUSANZE_RUBAVU') ? 'selected' : ''; ?>>KIGALI-MUSANZE_RUBAVU</option>
-        <option value="KIGALI_KAYONZA_RUSUMO" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_KAYONZA_RUSUMO') ? 'selected' : ''; ?>>KIGALI_KAYONZA_RUSUMO</option>
-        <option value="KIGALI_KAYONZA_KAGITUMBA" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_KAYONZA_KAGITUMBA') ? 'selected' : ''; ?>>KIGALI_KAYONZA_KAGITUMBA</option>
-        <option value="KIGALI_NGARAMA_NYAGATARE" <?php echo (isset($formData['place']) && $formData['place'] === 'KIGALI_NGARAMA_NYAGATARE') ? 'selected' : ''; ?>>KIGALI_NGARAMA_NYAGATARE</option>
+        <option value="">Select a Route</option>
+        <?php foreach ($routes as $route): ?>
+          <option value="<?php echo htmlspecialchars($route); ?>" <?php echo (isset($formData['place']) && $formData['place'] === $route) ? 'selected' : ''; ?>>
+            <?php echo htmlspecialchars($route); ?>
+          </option>
+        <?php endforeach; ?>
       </select>
 
       <label for="datetime">Date & Time</label>
@@ -198,19 +210,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </div>
   <script>
-    // Save permit file to localStorage
-    document.getElementById('permit').addEventListener('change', function () {
-      const file = this.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function () {
-        localStorage.setItem('driverPermit', reader.result);
-        alert('Permit file saved to localStorage.');
-      };
-      reader.readAsDataURL(file);
-    });
-
     // Capture GPS location
     document.getElementById("getLocationBtn").addEventListener("click", function () {
       if (navigator.geolocation) {
@@ -221,9 +220,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById("latitude").value = lat;
             document.getElementById("longitude").value = lon;
 
-            // Optional: store to localStorage
-            localStorage.setItem("driverLatitude", lat);
-            localStorage.setItem("driverLongitude", lon);
             alert("Location captured: " + lat + ", " + lon);
           },
           function (error) {
@@ -234,12 +230,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         alert("Geolocation is not supported by this browser.");
       }
     });
-
-    // Redirect on form submit
-    // document.getElementById("driverForm").addEventListener("submit", function (e) {
-    //   e.preventDefault();
-    //   window.location.href = "driverfp.html";
-    // });
   </script>
 </body>
 </html>

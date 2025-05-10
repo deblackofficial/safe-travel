@@ -86,9 +86,15 @@ if (isset($_GET['download_csv'])) {
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .back-button {
-      display: inline-block;
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin: 20px;
+    }
+
+    .back-button, .add-user-button {
+      display: inline-block;
       padding: 10px 20px;
       font-size: 16px;
       font-weight: bold;
@@ -102,7 +108,7 @@ if (isset($_GET['download_csv'])) {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .back-button:hover {
+    .back-button:hover, .add-user-button:hover {
       background-color: #2a2ad8;
       transform: translateY(-2px);
     }
@@ -229,7 +235,12 @@ if (isset($_GET['download_csv'])) {
     User Management Dashboard
   </div>
 
-  <a href="dash.php" class="back-button">← Back to Dashboard</a>
+  <div class="action-buttons">
+    <a href="dash.php" class="back-button">← Back to Dashboard</a>
+    <?php if ($isAdmin): ?>
+      <a href="adduser.php" class="add-user-button">+ Add New User</a>
+    <?php endif; ?>
+  </div>
 
   <div class="container">
     <h1>User Details</h1>
@@ -240,7 +251,7 @@ if (isset($_GET['download_csv'])) {
         <select name="filter">
           <option value="all" <?php echo $filter === 'all' ? 'selected' : ''; ?>>All</option>
           <option value="active" <?php echo $filter === 'active' ? 'selected' : ''; ?>>Active</option>
-          <option value="inactive" <?php echo $filter === 'inactive' ? 'selected' : ''; ?>>No Active</option>
+          <option value="inactive" <?php echo $filter === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
         </select>
         <button type="submit">Filter</button>
       </form>

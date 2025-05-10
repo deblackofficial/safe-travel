@@ -7,6 +7,24 @@ if (!isset($_SESSION['username'])) {
     header("Location: ../login.php");
     exit();
 }
+
+include '../conn.php'; // Include the database connection file
+
+// Fetch data from the database, group by place, and count occurrences
+$sql = "SELECT place, COUNT(*) AS count FROM (
+            SELECT place FROM passenger_report
+            UNION ALL
+            SELECT place FROM driver_report
+        ) AS combined_reports
+        GROUP BY place";
+$result = mysqli_query($conn, $sql);
+
+$data = [];
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data[] = $row;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,37 +107,6 @@ if (!isset($_SESSION['username'])) {
     }
 
     .btn:hover { background-color: #1a2bcf; }
-
-    #loginBox {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff;
-      padding: 30px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-    }
-
-    #loginBox input {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
-      width: 100%;
-      font-size: 16px;
-    }
-
-    #loginBox button {
-      background-color: #3b47f1;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    #loginBox button:hover { background-color: #1a2bcf; }
   </style>
 </head>
 <body>
@@ -127,69 +114,30 @@ if (!isset($_SESSION['username'])) {
     <h2><strong>Dashboard</strong></h2>
     <nav>
       <a href="userdetails.php">Users</a>
+      <a href="routes.php">Routes - Lines</a>
       <a href="driverdetails.php" class="btn">View Driver Reports</a>
       <a href="passengerdetails.php" class="btn">View Passenger Reports</a>
       <a href="logout.php">Logout</a>
     </nav>
   </div>
-    <div class="main-content">
-      <div class="dashboard-cards">
-        <div class="card">
-          <h3></h3>
-          <p></p>
-        </div>
-      </div>
+  <div class="main-content">
+    <div class="header">
+      <h1>Admin Dashboard</h1>
     </div>
+
+    <div class="dashboard-cards">
+      <?php if (!empty($data)): ?>
+        <?php foreach ($data as $item): ?>
+          <div class="card">
+            <h3>Place: <?php echo htmlspecialchars($item['place']); ?></h3>
+            <p>Total Reports: <?php echo htmlspecialchars($item['count']); ?></p>
+            <a href="details.php?place=<?php echo urlencode($item['place']); ?>" class="btn">View Details</a>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p>No data available.</p>
+      <?php endif; ?>
+    </div>
+  </div>
 </body>
-<script>
-  const getPassengerCount = () => {
-  try {
-    // Simulated/mock response
-    const data = [
-      { id: 1, name: "KIGALI-KARONGI-RUSIZI" },
-      { id: 2, name: "KIGALI-HUYE-RUSIZI" },
-      { id: 3, name: "KIGALI-KARONGI-RUSIZI" },
-      { id: 4, name: "KIGALI-KARONGI-RUSIZI" },
-      { id: 5, name: "KIGALI-KARONGI-RUSIZI" },
-      { id: 6, name: "KIGALI-KARONGI-RUSIZI" },
-    ];
-
-    const dashboardCards = document.querySelector('.dashboard-cards');
-    dashboardCards.innerHTML = ''; // Clear existing cards
-
-    for (const element of data) {
-      const card = document.createElement('div');
-      card.className = 'card';
-
-      const h3 = document.createElement('h3');
-      h3.textContent = `${element.id}`;
-
-      const p = document.createElement('p');
-      p.textContent = `Name: ${element.name}`;
-
-      const button = document.createElement('button');
-      button.className = 'btn';
-      button.textContent = 'View Details';
-      button.onclick = () => {
-        window.location.href = `passenger_details.html?id=${element.id}`;
-      };
-
-      card.appendChild(button);
-
-      card.appendChild(h3);
-      card.appendChild(p);
-      dashboardCards.appendChild(card);
-    }
-
-  } catch (error) {
-    console.error('Error fetching passenger count:', error);
-  }
-};
-
-getPassengerCount();
-// window.onload = () => {
-//   document.getElementById('dashboard').style.display = 'flex';
-// };
- // Call the function to fetch data
-</script>
 </html>
