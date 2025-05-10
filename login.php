@@ -8,22 +8,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+    // Fetch the user from the database
+    $sql = "SELECT * FROM users WHERE username = '$username'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) === 1) {
         $user = mysqli_fetch_assoc($result);
 
-        if ($user['status'] === 'inactive') {
-            // User is inactive
-            $inactiveMessage = "Your account has been deactivated. Please contact an admin for assistance.";
+        // Verify the hashed password
+        if (password_verify($password, $user['password'])) {
+            if ($user['status'] === 'inactive') {
+                // User is inactive
+                $inactiveMessage = "Your account has been deactivated. Please contact an admin for assistance.";
+            } else {
+                // User is active, proceed with login
+                $_SESSION['id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $user['role']; // Set the role in the session
+                header('Location: Dashboard/dash.php');
+                exit();
+            }
         } else {
-            // User is active, proceed with login
-            $_SESSION['id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role']; // Set the role in the session
-            header('Location: Dashboard/dash.php');
-            exit();
+            $error = "Invalid username or password.";
         }
     } else {
         $error = "Invalid username or password.";
