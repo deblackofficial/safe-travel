@@ -114,6 +114,7 @@ if ($result) {
     <h2><strong>Dashboard</strong></h2>
     <nav>
       <a href="userdetails.php">Users</a>
+      <a href="agency.php">Agency</a>
       <a href="routes.php">Routes - Lines</a>
       <a href="driverdetails.php" class="btn">View Driver Reports</a>
       <a href="passengerdetails.php" class="btn">View Passenger Reports</a>
