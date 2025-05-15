@@ -244,7 +244,7 @@ $result = mysqli_query($conn, $sql);
         <table>
             <thead>
                 <tr>
-                    <th>Agency Number</th>
+                    <th>No</th>
                     <th>Agency Name</th>
                     <th>Status</th>
                     <th>Date Created</th>
