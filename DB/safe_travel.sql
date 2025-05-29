@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 09:03 AM
+-- Generation Time: May 29, 2025 at 02:47 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -140,12 +140,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `first_name`, `last_name`, `phone_number`, `email`, `password`, `role`, `status`) VALUES
-(1, 'admin', 'Nzibuka', 'Emmanuel', '0788907402', 'nzibuka@gmail.com', 'admin123', 'admin', 'active'),
-(2, 'user1', 'Eric', 'Dusabe', '0788377373', 'ericblcdusx@gmail.com', '123456', 'manager', 'active'),
-(3, 'user2', 'helooo', 'user2', '09999', 'user@gmail.com', 'user123', 'user', 'inactive'),
-(4, 'user3', 'kwizera', 'patrick', '0782224273', 'stonerp@gmail.com', '$2y$10$9EnIK8g7qqXTSulLvBd.he2xQTcfbMmRh2vawh2f1yPzmEuowW4uu', 'user', 'inactive'),
-(5, 'user4', 'UMUBYEYI', 'Esperance', '0787451859', 'umubyeyi@gmail.com', '$2y$10$KNDa0C2oMICnLUTk0h7DOuF9NO64VbvmlRhq.ThjNU/HJSSasmvjS', 'user', 'active'),
-(6, 'user5', 'INGABIRE', 'Gentille', '0783999154', 'ingabire@gmail.com', '$2y$10$FO5yfVg176KIpDThkbEu0./YDwBxzS6ZoGPd/teT3E9oSl.rd9E.a', 'user', 'active');
+(1, 'admin', 'k', 'ty', '0788907402', 'gdgd@gmail.com', '$2y$10$pD.kQn0JC.WyONsQs0mHeuHKBlCQ/9hwWqu1QMJpa9lAjj2iuxpNG', 'admin', 'active');
 
 --
 -- Indexes for dumped tables
@@ -203,7 +198,7 @@ ALTER TABLE `routes`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
