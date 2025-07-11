@@ -71,302 +71,698 @@ if (!$result) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Routes Management</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <title>Routes Management | Transport System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: 'Nunito', sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --success: #4cc9f0;
+      --warning: #f72585;
+      --danger: #f72585;
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background-color: #f5f7ff; 
+      color: var(--dark);
     }
 
-    .header {
-      background-color: #3b47f1;
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      position: relative;
+      padding: 25px 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
     }
-
-    .back-button {
-      position: absolute;
-      margin-top: 60px;
-      left: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background-color: #2a2ad8;
-      border: none;
-      border-radius: 5px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+    .brand {
+      padding: 0 25px 25px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-
-    .back-button:hover {
-      background-color: #1f1fbf;
-      transform: translateY(-2px);
+    
+    .brand h2 { 
+      font-size: 24px; 
+      font-weight: 600; 
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
-    .add-button {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background-color: #28a745;
-      border: none;
-      border-radius: 5px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+    .brand-icon {
+      color: var(--success);
     }
-
-    .add-button:hover {
-      background-color: #218838;
-      transform: translateY(-2px);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .table-container {
-      max-height: 400px;
+    
+    .sidebar nav {
+      flex: 1;
+      padding: 25px 0;
       overflow-y: auto;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+    }
+    
+    .sidebar nav a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 15px;
+      padding: 12px 25px;
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 3px solid transparent;
+      transition: var(--transition);
+    }
+    
+    .sidebar nav a:hover, 
+    .sidebar nav a.active {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      border-left: 3px solid var(--accent);
+    }
+    
+    .sidebar nav a i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .sidebar-footer {
+      padding: 20px 25px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .user-info small {
+      display: block;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 12px;
     }
 
-    table {
+    .main-content {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .page-title h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .page-title p {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 2px 5px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn i {
+      font-size: 12px;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #4cc9f0, #4895ef);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #f72585, #b5179e);
+    }
+
+    .notification-btn {
+      position: relative;
+      background: none;
+      border: none;
+      color: var(--gray);
+      font-size: 18px;
+      cursor: pointer;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--warning);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      margin-bottom: 25px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .data-table {
       width: 100%;
       border-collapse: collapse;
     }
 
-    table th, table td {
+    .data-table thead th {
+      background-color: var(--primary);
+      color: white;
       padding: 12px 15px;
       text-align: left;
-      border: 1px solid #ddd;
-    }
-
-    table th {
-      background-color: #3b47f1;
-      color: white;
-      font-weight: bold;
+      font-weight: 500;
       position: sticky;
       top: 0;
-      z-index: 1;
     }
 
-    table tr:nth-child(even) {
-      background-color: #f2f2f2;
+    .data-table tbody tr {
+      border-bottom: 1px solid #dddddd;
+      transition: var(--transition);
     }
 
-    table tr:hover {
+    .data-table tbody tr:nth-of-type(even) {
+      background-color: #f9f9f9;
+    }
+
+    .data-table tbody tr:last-of-type {
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .data-table tbody tr:hover {
       background-color: #f1f1f1;
     }
 
+    .data-table td {
+      padding: 12px 15px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-active {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .status-inactive {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .action-btn i {
+      font-size: 12px;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .edit-btn {
+      background-color: rgba(13, 110, 253, 0.1);
+      color: #0d6efd;
+    }
+
+    .delete-btn {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+
+    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
-      z-index: 1000;
+      z-index: 1050;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
-      overflow: auto;
+      overflow: hidden;
       background-color: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal.show {
+      opacity: 1;
+    }
+
+    .modal-dialog {
+      max-width: 500px;
+      margin: 10% auto;
+      transform: translateY(-50px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal.show .modal-dialog {
+      transform: translateY(0);
     }
 
     .modal-content {
       background-color: #fff;
-      margin: 10% auto;
-      padding: 20px;
       border-radius: 10px;
-      width: 50%;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
     }
 
-    .modal-content h2 {
-      margin-top: 0;
-      color: #3b47f1;
-      text-align: center;
+    .modal-header {
+      padding: 15px 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
     }
 
     .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
       cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
     }
 
     .close:hover {
-      color: #000;
+      opacity: 1;
     }
 
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    .modal-body {
+      padding: 20px;
     }
 
-    label {
-      font-weight: bold;
-      color: #333;
+    .form-group {
+      margin-bottom: 15px;
     }
 
-    input, select, button {
-      padding: 10px;
-      font-size: 16px;
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 15px;
       border: 1px solid #ddd;
       border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.3s;
     }
 
-    input:focus, select:focus {
-      border-color: #3b47f1;
+    .form-control:focus {
+      border-color: var(--primary);
       outline: none;
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
     }
 
-    button {
-      background-color: #3b47f1;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+    .modal-footer {
+      padding: 15px 20px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
     }
 
-    button:hover {
-      background-color: #2a2ad8;
+    /* Alert Messages */
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-success {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      border-left: 4px solid #28a745;
+    }
+
+    .alert-danger {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border-left: 4px solid #dc3545;
+    }
+
+    .alert i {
+      font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-layout {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+      }
+      
+      .modal-dialog {
+        margin: 20px auto;
+        width: 95%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <a href="dash.php" class="back-button">← Back to Dashboard</a>
-    Routes Management
-    <?php if ($isAdmin): ?>
-      <button class="add-button" onclick="openAddModal()">+ Add New Route</button>
-    <?php endif; ?>
-  </div>
+  <div class="dashboard-layout">
+    <div class="sidebar">
+      <div class="brand">
+        <h2><i class="fas fa-bus-alt brand-icon"></i> Transport System</h2>
+      </div>
+      
+      <nav>
+        <a href="dash.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="userdetails.php"><i class="fas fa-users"></i> User Management</a>
+        <a href="routes.php" class="active"><i class="fas fa-route"></i> Route Management</a>
+        <a href="driverdetails.php"><i class="fas fa-id-card"></i> Driver Reports</a>
+        <a href="passengerdetails.php"><i class="fas fa-user-tag"></i> Passenger Reports</a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar">
+            <?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>
+          </div>
+          <div class="user-info">
+            <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>
+            <small>Admin</small>
+          </div>
+        </div>
+        <a href="logout.php" class="btn" style="display: block; text-align: center; margin-top: 15px;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-title">
+          <h1>Route Management</h1>
+          <p>Manage all transportation routes in the system</p>
+        </div>
+        
+        <div class="header-actions">
+          <?php if ($isAdmin): ?>
+            <button class="btn btn-success" onclick="openAddModal()">
+              <i class="fas fa-plus"></i> Add Route
+            </button>
+          <?php endif; ?>
+        </div>
+      </div>
 
-  <div class="container">
-    <h1>All Routes</h1>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Start Point</th>
-            <th>Middle Point</th>
-            <th>End Point</th>
-            <th>Status</th>
-            <th>Date Created</th>
-            <?php if ($isAdmin): ?>
-              <th>Actions</th>
-            <?php endif; ?>
-          </tr>
-        </thead>
-        <tbody>
-          <?php $counter = 1; ?>
-          <?php while ($row = mysqli_fetch_assoc($result)): ?>
-            <tr>
-              <td><?php echo $counter++; ?></td>
-              <td><?php echo htmlspecialchars($row['start_point']); ?></td>
-              <td><?php echo htmlspecialchars($row['middle_point']); ?></td>
-              <td><?php echo htmlspecialchars($row['end_point']); ?></td>
-              <td><?php echo htmlspecialchars($row['status']); ?></td>
-              <td><?php echo htmlspecialchars($row['created_at']); ?></td>
-              <?php if ($isAdmin): ?>
-                <td>
-                  <button onclick="openEditModal(<?php echo $row['id']; ?>, '<?php echo htmlspecialchars($row['start_point']); ?>', '<?php echo htmlspecialchars($row['middle_point']); ?>', '<?php echo htmlspecialchars($row['end_point']); ?>', '<?php echo htmlspecialchars($row['status']); ?>')">Edit</button>
-                </td>
-              <?php endif; ?>
-            </tr>
-          <?php endwhile; ?>
-        </tbody>
-      </table>
+      <?php if (isset($success)): ?>
+        <div class="alert alert-success">
+          <i class="fas fa-check-circle"></i> <?php echo $success; ?>
+        </div>
+      <?php endif; ?>
+
+      <?php if (isset($error)): ?>
+        <div class="alert alert-danger">
+          <i class="fas fa-exclamation-circle"></i> <?php echo $error; ?>
+        </div>
+      <?php endif; ?>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">All Routes</h2>
+          <div class="card-actions">
+            <span class="badge">Total: <?php echo mysqli_num_rows($result); ?></span>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Start Point</th>
+                <th>Middle Point</th>
+                <th>End Point</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <?php if ($isAdmin): ?>
+                  <th>Actions</th>
+                <?php endif; ?>
+              </tr>
+            </thead>
+            <tbody>
+              <?php $counter = 1; ?>
+              <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                  <td><?php echo $counter++; ?></td>
+                  <td><?php echo htmlspecialchars($row['start_point']); ?></td>
+                  <td><?php echo htmlspecialchars($row['middle_point']); ?></td>
+                  <td><?php echo htmlspecialchars($row['end_point']); ?></td>
+                  <td>
+                    <span class="status-badge status-<?php echo strtolower($row['status']); ?>">
+                      <?php echo ucfirst($row['status']); ?>
+                    </span>
+                  </td>
+                  <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                  <?php if ($isAdmin): ?>
+                    <td>
+                      <button class="action-btn edit-btn" 
+                        onclick="openEditModal(
+                          <?php echo $row['id']; ?>, 
+                          '<?php echo htmlspecialchars($row['start_point']); ?>', 
+                          '<?php echo htmlspecialchars($row['middle_point']); ?>', 
+                          '<?php echo htmlspecialchars($row['end_point']); ?>', 
+                          '<?php echo htmlspecialchars($row['status']); ?>'
+                        )">
+                        <i class="fas fa-edit"></i> Edit
+                      </button>
+                    </td>
+                  <?php endif; ?>
+                </tr>
+              <?php endwhile; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Add New Route Modal -->
+  <!-- Add Route Modal -->
   <div id="addRouteModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeAddModal()">&times;</span>
-      <h2>Add New Route</h2>
-      <form method="POST" action="">
-        <input type="hidden" name="action" value="add">
-
-        <label for="add_start_point">Start Point</label>
-        <input type="text" id="add_start_point" name="start_point" placeholder="Enter start point" required>
-
-        <label for="add_middle_point">Middle Point</label>
-        <input type="text" id="add_middle_point" name="middle_point" placeholder="Enter middle point (optional)">
-
-        <label for="add_end_point">End Point</label>
-        <input type="text" id="add_end_point" name="end_point" placeholder="Enter end point" required>
-
-        <label for="add_status">Status</label>
-        <select id="add_status" name="status" required>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
-
-        <button type="submit">Add Route</button>
-      </form>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Route</h5>
+          <button type="button" class="close" onclick="closeAddModal()">&times;</button>
+        </div>
+        <form method="POST" action="">
+          <div class="modal-body">
+            <input type="hidden" name="action" value="add">
+            
+            <div class="form-group">
+              <label for="add_start_point" class="form-label">Start Point</label>
+              <input type="text" class="form-control" id="add_start_point" name="start_point" placeholder="Enter start point" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="add_middle_point" class="form-label">Middle Point (Optional)</label>
+              <input type="text" class="form-control" id="add_middle_point" name="middle_point" placeholder="Enter middle point">
+            </div>
+            
+            <div class="form-group">
+              <label for="add_end_point" class="form-label">End Point</label>
+              <input type="text" class="form-control" id="add_end_point" name="end_point" placeholder="Enter end point" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="add_status" class="form-label">Status</label>
+              <select class="form-control" id="add_status" name="status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="closeAddModal()">Cancel</button>
+            <button type="submit" class="btn btn-success">Add Route</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
   <!-- Edit Route Modal -->
   <div id="editRouteModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeEditModal()">&times;</span>
-      <h2>Edit Route</h2>
-      <form method="POST" action="">
-        <input type="hidden" id="edit_route_id" name="route_id">
-        <input type="hidden" name="action" value="edit">
-
-        <label for="edit_start_point">Start Point</label>
-        <input type="text" id="edit_start_point" name="start_point" required>
-
-        <label for="edit_middle_point">Middle Point</label>
-        <input type="text" id="edit_middle_point" name="middle_point">
-
-        <label for="edit_end_point">End Point</label>
-        <input type="text" id="edit_end_point" name="end_point" required>
-
-        <label for="edit_status">Status</label>
-        <select id="edit_status" name="status" required>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
-
-        <button type="submit">Save Changes</button>
-      </form>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Route</h5>
+          <button type="button" class="close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form method="POST" action="">
+          <div class="modal-body">
+            <input type="hidden" id="edit_route_id" name="route_id">
+            <input type="hidden" name="action" value="edit">
+            
+            <div class="form-group">
+              <label for="edit_start_point" class="form-label">Start Point</label>
+              <input type="text" class="form-control" id="edit_start_point" name="start_point" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="edit_middle_point" class="form-label">Middle Point (Optional)</label>
+              <input type="text" class="form-control" id="edit_middle_point" name="middle_point">
+            </div>
+            
+            <div class="form-group">
+              <label for="edit_end_point" class="form-label">End Point</label>
+              <input type="text" class="form-control" id="edit_end_point" name="end_point" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="edit_status" class="form-label">Status</label>
+              <select class="form-control" id="edit_status" name="status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="closeEditModal()">Cancel</button>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
   <script>
+    // Modal functions
     function openAddModal() {
-      document.getElementById('addRouteModal').style.display = 'block';
+      const modal = document.getElementById('addRouteModal');
+      modal.style.display = 'block';
+      setTimeout(() => modal.classList.add('show'), 10);
     }
 
     function closeAddModal() {
-      document.getElementById('addRouteModal').style.display = 'none';
+      const modal = document.getElementById('addRouteModal');
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
     }
 
     function openEditModal(id, startPoint, middlePoint, endPoint, status) {
@@ -375,23 +771,41 @@ if (!$result) {
       document.getElementById('edit_middle_point').value = middlePoint;
       document.getElementById('edit_end_point').value = endPoint;
       document.getElementById('edit_status').value = status;
-      document.getElementById('editRouteModal').style.display = 'block';
+      
+      const modal = document.getElementById('editRouteModal');
+      modal.style.display = 'block';
+      setTimeout(() => modal.classList.add('show'), 10);
     }
 
     function closeEditModal() {
-      document.getElementById('editRouteModal').style.display = 'none';
+      const modal = document.getElementById('editRouteModal');
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
     }
 
-    // Close modal when clicking outside of it
+    // Close modal when clicking outside
     window.onclick = function(event) {
       const addModal = document.getElementById('addRouteModal');
       const editModal = document.getElementById('editRouteModal');
+      
       if (event.target === addModal) {
         closeAddModal();
       } else if (event.target === editModal) {
         closeEditModal();
       }
     }
+
+    // Show success/error messages and hide after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+      const alerts = document.querySelectorAll('.alert');
+      
+      alerts.forEach(alert => {
+        setTimeout(() => {
+          alert.style.opacity = '0';
+          setTimeout(() => alert.style.display = 'none', 300);
+        }, 5000);
+      });
+    });
   </script>
 </body>
 </html>
