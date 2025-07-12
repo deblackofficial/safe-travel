@@ -74,7 +74,7 @@ function sendOverlimitNotification($bus_id, $current_passengers, $max_capacity) 
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'emmynzibk21@gmail.com'; // Use environment variable in production!
+        $mail->Username   = 'ericblcdusx@gmail.com'; // Use environment variable in production!
         $mail->Password   = 'zxndjlwqcpkdedcq'; // Generate new one!
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
@@ -100,7 +100,7 @@ function sendOverlimitNotification($bus_id, $current_passengers, $max_capacity) 
         }
 
         // Content
-        $mail->setFrom('emmynzibk21@gmail.com', 'Safe Travel System');
+        $mail->setFrom('ericblcdusx@gmail.com', 'Safe Travel System');
         $mail->isHTML(true);
         $mail->Subject = '⚠️ Bus Over Capacity Alert - ' . $bus['plate_number'];
         
@@ -194,7 +194,7 @@ function testEmailConfiguration() {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'emmynzibk21@gmail.com';
+        $mail->Username = 'ericblcdusx@gmail.com';
         $mail->Password = 'zxndjlwqcpkdedcq';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
